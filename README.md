@@ -1,2 +1,3 @@
-# MicroG: 
+# 《Micro-Structures Graph-Based Point Cloud Registration for Balancing Efficiency and Accuracy》
+# coming soon...
 
