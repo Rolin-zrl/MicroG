@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 
 project(MicroG VERSION 1.0 LANGUAGES CXX)
 
+#cmake_policy(SET CMP0074 OLD)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -13,9 +14,9 @@ endif()
 
 find_package(PCL 1.12 REQUIRED)
 find_package(Boost REQUIRED)
-find_package(Eigen3 3.3.4 REQUIRED)
-set(Sophus_DIR "${CMAKE_SOURCE_DIR}/3rd/Sophus")
-find_package(Sophus REQUIRED PATHS ${Sophus_DIR})
+find_package(Eigen3 REQUIRED)
+set(Sophus_DIR "${CMAKE_SOURCE_DIR}/3rd/sophus")
+find_package(Sophus REQUIRED PATHS ${Sophus_DIR} NO_DEFAULT_PATH)
 find_package(OpenMP REQUIRED)
 if(OPENMP_FOUND)
     message(STATUS "OpenMP found")
@@ -34,7 +35,6 @@ target_link_libraries(MicroG PRIVATE
         Boost::boost
         Eigen3::Eigen
         Sophus::Sophus
-        fmt
 )
 
 

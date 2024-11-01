@@ -26,7 +26,7 @@ We've tested it on CLion 2024 running on Ubuntu 18.04.
 </br>A compiler that supports OpenMP.
 - CMake >= 3.20
 - PCL >=1.12
-- Eigen3 >=3.3.4
+- Eigen3 >=3.3.0
 ## Usage
 1. Clone the repository:
    ```bash
