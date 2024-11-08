@@ -12,12 +12,12 @@
 
 ## Introduction
  This paper introduces a micro-structures graph-based coarse-to-fine global point cloud registration method. This method employs a hierarchical outlier removal strategy based on graph nodes and edges, combined with the GNC-Welsch estimator, to ensure robustness during coarse registration. At finer scales, PA-AA optimization is utilized to further exploit the geometric features of corresponding micro-structures, enhancing accuracy with minimal additional computational cost.
- <img src="imgs/framework.png" alt="teaser" width="100%">
+ <img src="/imgs/framework.png" alt="teaser" width="100%">
 
 We have conducted experiments on ETH and 3DMatch dataset.
 
- <img src="imgs/teaser.png" alt="teaser" width="50%">
- <img src="imgs/resultsETH.png" alt="teaser" width="100%">
+ <img src="/imgs/teaser.png" alt="teaser" width="50%">
+ <img src="/imgs/resultsETH.png" alt="teaser" width="100%">
 
 
 
