@@ -10,13 +10,13 @@ void prepro::OctreePointCloudVoxel(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud, p
     octree->getOccupiedVoxelCenters(cloudVG->points);
 };
 
-void prepro::StaticsOutlierRemoval(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud,
+void prepro::OutlierRemoval(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud,
                                    pcl::octree::OctreePointCloudSearch<pcl::PointXYZ>::Ptr &octree) {
-    pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor;
+    pcl::RadiusOutlierRemoval<pcl::PointXYZ> sor;
     pcl::PointCloud<pcl::PointXYZ>::Ptr remove_cloud(new pcl::PointCloud<pcl::PointXYZ>);
     sor.setInputCloud(cloud);
-    sor.setMeanK(20);
-    sor.setStddevMulThresh(1.5);
+    sor.setRadiusSearch(2.0*octree->getResolution());
+    sor.setMinNeighborsInRadius(4);
     sor.filter(*cloud);
     sor.setNegative(true);
     sor.filter(*remove_cloud);
@@ -31,8 +31,8 @@ void prepro::IssKeyPointExtration(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud, pc
     double iss_non_max_radius_ = 4 * resolution;  //3
     double iss_gamma_21_(0.975);
     double iss_gamma_32_(0.975);
-    double iss_min_neighbors_(8);
-    int iss_threads_(16); //switch to the number of threads in your cpu for acceleration
+    double iss_min_neighbors_(12);
+    int iss_threads_(1); //switch to the number of threads in your cpu for acceleration
 
     pcl::search::KdTree<pcl::PointXYZ>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZ>());
     pcl::ISSKeypoint3D<pcl::PointXYZ, pcl::PointXYZ> iss_detector;
@@ -54,7 +54,6 @@ void prepro::fpfhComputation(pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud, double&
     //compute normal
     pcl::search::KdTree<pcl::PointXYZ>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZ>());
     pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> ne;
-//    ne.setNumberOfThreads(16);
     ne.setInputCloud(cloud);
     ne.setSearchMethod(tree);
     ne.setRadiusSearch(3 * resolution);//4

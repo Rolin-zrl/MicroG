@@ -27,6 +27,7 @@
 #include <pcl/filters/extract_indices.h>
 #include <pcl/io/pcd_io.h>
 #include<pcl/registration/correspondence_estimation.h>
+#define SOPHUS_USE_BASIC_LOGGING
 #include <sophus/se3.hpp>
 #include "AndersonAcceleration.h"
 #define SAME_THRESHOLD 1e-6

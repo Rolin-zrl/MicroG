@@ -71,8 +71,8 @@ namespace c2r {
         prepro::OctreePointCloudVoxel(origin_cloudS, cloudS, octree_S, resolution);
         prepro::OctreePointCloudVoxel(origin_cloudT, cloudT, octree_T, resolution);
         //filter
-        prepro::StaticsOutlierRemoval(cloudS, octree_S);
-        prepro::StaticsOutlierRemoval(cloudT, octree_T);
+        prepro::OutlierRemoval(cloudS, octree_S);
+        prepro::OutlierRemoval(cloudT, octree_T);
 
         if(DEBUG_DETAILS) {
             t1 = std::chrono::system_clock::now();
@@ -211,7 +211,6 @@ namespace c2r {
         pcl::PointCloud<pcl::PointXYZ>::Ptr freg_cloudT(new  pcl::PointCloud<pcl::PointXYZ>);
         pcl::transformPointCloud(*cloudT, *creg_cloudT, CoarseTrans);
         pcl::transformPointCloud(*cloudT, *freg_cloudT, FineTrans);
-
         evaluation::CalculateRMSE(cloudS,creg_cloudT,Crmse);
         evaluation::CalculateRMSE(cloudS,freg_cloudT,Frmse);
         if(DEBUG_DETAILS) {
@@ -258,22 +257,26 @@ namespace c2r {
 
     void MicroG::Visualization() {
 
-            std::thread viewer_thread(ShowVGPointCloudCorr, cloudS, cloudT,corS,corT,"Initial Correspondences");
+         pcl::visualization::PCLVisualizer::Ptr viewerVGF(new pcl::visualization::PCLVisualizer);
+        int v1(0), v2(0), v3(0), v4(0);
 
-            std::thread viewer_thread2(ShowVGPointCloudCorr, cloudS, cloudT,inliers_corS,inliers_corT,"After Removal Outliers");
+        viewerVGF->createViewPort(0.0,0.5,0.5,1.0,v1);
+        viewerVGF->createViewPort(0.5,0.5,1.0,1.0,v2);
+        viewerVGF->createViewPort(0.5,0.0,1.0,0.5,v3);
+        viewerVGF->createViewPort(0.0,0.0,0.5,0.5,v4);
+        pcl::PointCloud<pcl::PointXYZ>::Ptr creg_cloudT(new  pcl::PointCloud<pcl::PointXYZ>);
+        pcl::transformPointCloud(*cloudT, *creg_cloudT, CoarseTrans);
+        pcl::PointCloud<pcl::PointXYZ>::Ptr freg_cloudT(new  pcl::PointCloud<pcl::PointXYZ>);
+        pcl::transformPointCloud(*cloudT, *freg_cloudT, FineTrans);
 
-            pcl::PointCloud<pcl::PointXYZ>::Ptr creg_cloudT(new  pcl::PointCloud<pcl::PointXYZ>);
-            pcl::transformPointCloud(*cloudT, *creg_cloudT, CoarseTrans);
-            std::thread viewer_thread3(ShowVGPointCloud, cloudS, creg_cloudT,"Coarse Reg");
-
-            pcl::PointCloud<pcl::PointXYZ>::Ptr freg_cloudT(new  pcl::PointCloud<pcl::PointXYZ>);
-            pcl::transformPointCloud(*cloudT, *freg_cloudT, FineTrans);
-            std::thread viewer_thread4(ShowVGPointCloud, cloudS, freg_cloudT,"Fine Reg");
-
-            viewer_thread.join();
-            viewer_thread2.join();
-            viewer_thread3.join();
-            viewer_thread4.join();
+        ShowVGPointCloudCorr(viewerVGF,cloudS, cloudT,corS,corT,"Initial Correspondences",v1);
+        ShowVGPointCloudCorr(viewerVGF,cloudS, cloudT,inliers_corS,inliers_corT,"After Removal Outliers",v2);
+        ShowVGPointCloud(viewerVGF,cloudS, creg_cloudT,"Coarse Reg",v3);
+        ShowVGPointCloud(viewerVGF,cloudS, freg_cloudT,"Fine Reg",v4);
+        while (!viewerVGF->wasStopped()) {
+            viewerVGF->spinOnce(100);
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
     };
 
     int OutliersRate(pcl::PointCloud<pcl::PointXYZ>::Ptr& corS_,pcl::PointCloud<pcl::PointXYZ>::Ptr& corT_,Eigen::Matrix4d &GtTrans_,double &resolution_){
@@ -294,42 +297,33 @@ namespace c2r {
             corT_->push_back((*cloudT_)[idx_T]);
         }
     };
-    void ShowVGPointCloudCorr ( const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloudS,  const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloudT, const pcl::PointCloud<pcl::PointXYZ>::Ptr& corS_,const pcl::PointCloud<pcl::PointXYZ>::Ptr& corT_,const std::string& viewer_name)
+    void ShowVGPointCloudCorr (pcl::visualization::PCLVisualizer::Ptr& viewerVGF, const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloudS,  const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloudT, const pcl::PointCloud<pcl::PointXYZ>::Ptr& corS_, const pcl::PointCloud<pcl::PointXYZ>::Ptr& corT_,const std::string& viewer_name,int v)
     {
-        pcl::visualization::PCLVisualizer::Ptr viewerVGF(new pcl::visualization::PCLVisualizer(viewer_name));
-        pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> colorS(cloudS, 222.0/255, 185.0/255, 0.0/255); //blue
-        pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> colorT(cloudT, 4.0/255, 151.0/255, 210.0/255); //green
+        pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> colorS(cloudS, 222.0, 185.0, 0.0); //blue
+        pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> colorT(cloudT, 4.0, 151.0, 210.0); //green
         viewerVGF->setBackgroundColor(255, 255, 255);
-        viewerVGF->addPointCloud<pcl::PointXYZ>(cloudS,"source_cloud");
-        viewerVGF->addPointCloud<pcl::PointXYZ>(cloudT,"target_cloud");
-        viewerVGF->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, "source_cloud");
-        viewerVGF->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, "target_cloud");
-
+        viewerVGF->addPointCloud<pcl::PointXYZ>(cloudS,colorS,viewer_name+"S",v);
+        viewerVGF->addPointCloud<pcl::PointXYZ>(cloudT,colorT,viewer_name+"T",v);
+        viewerVGF->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, viewer_name+"S");
+        viewerVGF->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, viewer_name+"T");
         for(int i=0;i<corS_->size();i++)
         {
             std::stringstream ss;
-            ss<<"line"<<i;
-            viewerVGF->addLine(corS_->points[i],corT_->points[i],230/255.0,52/255.0,4/255.0,ss.str());
+            ss<<viewer_name<<i;
+            viewerVGF->addLine(corS_->points[i],corT_->points[i],230/255.0,52/255.0,4/255.0,ss.str(),v);
         }
-        while (!viewerVGF->wasStopped()) {
-            viewerVGF->spinOnce(100);
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        }
+        viewerVGF->addText(viewer_name,10,10,20,0,0, 0,viewer_name,v);
     };
-    void ShowVGPointCloud ( const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloudS,  const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloudT,const std::string& viewer_name) {
-        pcl::visualization::PCLVisualizer::Ptr viewerVGF(new pcl::visualization::PCLVisualizer(viewer_name));
-        pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> colorS(cloudS, 255, 255, 255); //blue
-        pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> colorT(cloudT, 255 , 255 ,255); //green
-        viewerVGF->setBackgroundColor(255, 255, 255);
-        viewerVGF->addPointCloud<pcl::PointXYZ>(cloudS, "source_cloud");
-        viewerVGF->addPointCloud<pcl::PointXYZ>(cloudT, "target_cloud");
-        viewerVGF->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, "source_cloud");
-        viewerVGF->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, "target_cloud");
+    void ShowVGPointCloud ( pcl::visualization::PCLVisualizer::Ptr& viewerVGF,const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloudS, const  pcl::PointCloud<pcl::PointXYZ>::Ptr& cloudT,const std::string& viewer_name,int v) {
 
-        while (!viewerVGF->wasStopped()) {
-            viewerVGF->spinOnce(100);
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        };
+        pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> colorS(cloudS, 222.0, 185.0, 0.0); //blue
+        pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> colorT(cloudT, 4.0, 151.0, 210.0); //green
+        viewerVGF->setBackgroundColor(255, 255, 255);
+        viewerVGF->addPointCloud<pcl::PointXYZ>(cloudS, colorS,viewer_name+"S",v);
+        viewerVGF->addPointCloud<pcl::PointXYZ>(cloudT, colorT,viewer_name+"T",v);
+        viewerVGF->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, viewer_name+"S");
+        viewerVGF->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, viewer_name+"T");
+        viewerVGF->addText(viewer_name,10,10,20,0,0, 0,viewer_name,v);
     }
 
 

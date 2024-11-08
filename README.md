@@ -24,7 +24,7 @@ We have conducted experiments on ETH and 3DMatch dataset.
 ## Dependencies
 We've tested it on CLion 2024 running on Ubuntu 18.04. 
 </br>A compiler that supports OpenMP.
-- CMake >= 3.20
+- CMake >= 3.10
 - PCL >=1.12
 - Eigen3 >=3.3.0
 ## Usage
@@ -39,7 +39,7 @@ We've tested it on CLion 2024 running on Ubuntu 18.04.
     make
     ./ MicroG "../data/s1.ply" "../data/s1.ply" "./data/s1-s2.tfm" 0.1 800 2
 
-#### Input Six parameters introduced in the paper
+#### Input six parameters introduced in the paper
 1. source_path
 2. target_path
 3. gt_path *(optional)*

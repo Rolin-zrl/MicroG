@@ -18,7 +18,6 @@
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 #include <pcl/correspondence.h>
-#include <pcl/keypoints/iss_3d.h>
 #include <pcl/visualization/pcl_visualizer.h>
 
 
@@ -85,8 +84,8 @@ namespace c2r {
 
     int OutliersRate(pcl::PointCloud<pcl::PointXYZ>::Ptr& corS_,pcl::PointCloud<pcl::PointXYZ>::Ptr& corT_,Eigen::Matrix4d &GtTrans_,double &resolution_);
     void Corr2Point( pcl::CorrespondencesPtr& corr_,pcl::PointCloud<pcl::PointXYZ>::Ptr& cloudS_,pcl::PointCloud<pcl::PointXYZ>::Ptr& cloudT_,pcl::PointCloud<pcl::PointXYZ>::Ptr& corS_,pcl::PointCloud<pcl::PointXYZ>::Ptr& corT_);
-    void ShowVGPointCloudCorr ( const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloudS,  const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloudT, const pcl::PointCloud<pcl::PointXYZ>::Ptr& corS_,const pcl::PointCloud<pcl::PointXYZ>::Ptr& corT_,const std::string& viewer_name);
-    void ShowVGPointCloud ( const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloudS,  const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloudT,const std::string& viewer_name);
+    void ShowVGPointCloudCorr (pcl::visualization::PCLVisualizer::Ptr& viewerVGF, const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloudS,  const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloudT, const pcl::PointCloud<pcl::PointXYZ>::Ptr& corS_,const pcl::PointCloud<pcl::PointXYZ>::Ptr& corT_,const std::string& viewer_name,int v);
+    void ShowVGPointCloud (pcl::visualization::PCLVisualizer::Ptr& viewerVGF, const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloudS,  const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloudT,const std::string& viewer_name,int v);
 } // C2R
 
 #endif //MICROG_MICROG_H

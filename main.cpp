@@ -8,6 +8,13 @@
 // ================================================================================================
 
 #include "include/MicroG.h"
+#include <filesystem>
+
+void create_filedrectory(const std::string& path) {
+    if (!std::filesystem::exists(path)) {
+     std::filesystem::create_directories(path);
+    }
+};
 
 int main(int argc, char** argv) {
 
@@ -15,6 +22,7 @@ int main(int argc, char** argv) {
 
     //INPUT
     microG.result_path="../data/";
+    create_filedrectory(microG.result_path);
     microG.source_path=argv[1];
     microG.target_path=argv[2];
     if(argc==6) {
@@ -39,8 +47,8 @@ int main(int argc, char** argv) {
     microG.CoarseREG();
     microG.FineREG();
 
-//    microG.Evaluation(); //T*target
-//    microG.RecordFiles();
+    microG.Evaluation(); //T*target
+    microG.RecordFiles();
     microG.Visualization();
 
 

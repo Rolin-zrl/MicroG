@@ -3,7 +3,8 @@
 
 
 #include <pcl/octree/octree_search.h>
-#include <pcl/filters//statistical_outlier_removal.h>
+#include <pcl/filters/statistical_outlier_removal.h>
+#include <pcl/filters/radius_outlier_removal.h>
 #include <pcl/features/normal_3d.h>
 #include <pcl/features/fpfh_omp.h>
 #include <pcl/keypoints/iss_3d.h>
@@ -12,7 +13,7 @@ namespace prepro {
     void OctreePointCloudVoxel(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud, pcl::PointCloud<pcl::PointXYZ>::Ptr &cloudVG,
                                pcl::octree::OctreePointCloudSearch<pcl::PointXYZ>::Ptr &octree, double &inlTh) ;
 
-    void StaticsOutlierRemoval(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud,
+    void OutlierRemoval(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud,
                                pcl::octree::OctreePointCloudSearch<pcl::PointXYZ>::Ptr &octree);
 
     void IssKeyPointExtration(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud, pcl::PointCloud<pcl::PointXYZ>::Ptr &ISS,
