@@ -1,7 +1,7 @@
 # MicroG
 《Micro-Structures Graph-Based Point Cloud Registration for Balancing Efficiency and Accuracy》[[arxiv](http://arxiv.org/abs/2410.21857)]
 ## News
-- [2024-11-17]: [Early Access(https://ieeexplore.ieee.org/document/10755047)]
+- [2024-11-17]: [Early Access](https://ieeexplore.ieee.org/document/10755047)
 - [2024-10-26]: Our paper has been accpeted by **TGRS** (IEEE Transactions on Geoscience and Remote Sensing).
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -61,15 +61,15 @@ etc.
 People who inspired this idea, gave suggestions and reported errors, especially [Pengcheng Wei](https://github.com/WPC-WHU) contributing to the removal of outliers.
 
 ## Citation
-@ARTICLE{10755047,
-  author={Zhang, Rongling and Yan, Li and Wei, Pengcheng and Xie, Hong and Wang, Pinzhuo and Wang, Binbing},
-  journal={IEEE Transactions on Geoscience and Remote Sensing}, 
-  title={Micro-Structures Graph-Based Point Cloud Registration for Balancing Efficiency and Accuracy}, 
-  year={2024},
-  volume={},
-  number={},
-  pages={1-1},
-  keywords={Point cloud registration;correspondence graph;robust estimator;planar adjustment;Anderson acceleration},
+@ARTICLE{10755047,</br>
+  author={Zhang, Rongling and Yan, Li and Wei, Pengcheng and Xie, Hong and Wang, Pinzhuo and Wang, Binbing},</br>
+  journal={IEEE Transactions on Geoscience and Remote Sensing}, </br>
+  title={Micro-Structures Graph-Based Point Cloud Registration for Balancing Efficiency and Accuracy}, </br>
+  year={2024},</br>
+  volume={},</br>
+  number={},</br>
+  pages={1-1},</br>
+  keywords={Point cloud registration;correspondence graph;robust estimator;planar adjustment;Anderson acceleration},</br>
   doi={10.1109/TGRS.2024.3488502}}
 
 
