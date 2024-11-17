@@ -1,7 +1,7 @@
 # MicroG
 《Micro-Structures Graph-Based Point Cloud Registration for Balancing Efficiency and Accuracy》[[arxiv](http://arxiv.org/abs/2410.21857)]
 ## News
-- [2024-11-17]: [[Early Access](https://ieeexplore.ieee.org/document/10755047)]
+- [2024-11-17]: [Early Access(https://ieeexplore.ieee.org/document/10755047)]
 - [2024-10-26]: Our paper has been accpeted by **TGRS** (IEEE Transactions on Geoscience and Remote Sensing).
 ## Table of Contents
 1. [Introduction](#introduction)
